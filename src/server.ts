@@ -1,11 +1,11 @@
 import express from 'express';
 
+import rotas from './routes';
+
 const app = express();
 const port = 3333;
 
-app.get('/', (req, res) => {
-  res.json({ message: 'hello world' });
-});
+app.use(rotas);
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
