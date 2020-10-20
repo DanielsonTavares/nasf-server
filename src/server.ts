@@ -1,6 +1,6 @@
 import express from 'express';
 
-import rotas from './routes';
+import rotas from './routers/usuarioRoute';
 
 const app = express();
 const port = 3333;
