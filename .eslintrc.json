@@ -17,6 +17,26 @@
     "rules": {
       "linebreak-style":"off",
       "no-console":"off",
-      "class-methods-use-this":"off"
+      "class-methods-use-this":"off",
+
+      // omitir erro 'Missing file extension "ts" for "caminho do modulo" import/extensions'
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          "js": "never",
+          "jsx": "never",
+          "ts": "never",
+          "tsx": "never"
+        }
+     ]
+    },
+    // omitir erro 'Unable to resolve path to module 'caminho do modulo'  import/no-unresolved'
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        }
+      }
     }
 }
