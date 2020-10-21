@@ -1,14 +1,15 @@
-
 module.exports = {
   development: {
     client: 'pg',
     connection: process.env.DATABASE_URL,
     migrations: {
       tableName: 'knex_migrations',
-      directory: `${__dirname}/${process.env.PATH_DIST}/database/migrations`,
+      // directory: `${__dirname}/${process.env.PATH_DIST}/database/migrations`,
+      directory: `${process.env.PATH_DIST}`,
     },
     seeds: {
       directory: `${__dirname}/${process.env.PATH_DIST}/database/seeds`,
+
     },
   },
 
