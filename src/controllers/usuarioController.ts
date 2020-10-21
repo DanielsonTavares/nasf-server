@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import knex from '../database';
 
 class UsuarioController {
   async post(request: Request, response: Response) {
@@ -21,7 +22,10 @@ class UsuarioController {
 
   async getById(request: Request, response: Response) {
     const { id } = request.params;
-    response.status(200).send(`Rota GET com ID ${id}`);
+
+    const result = await knex('usuario').where({ id }).select('nome');
+
+    response.status(200).send(response.json(result));
   }
 }
 
