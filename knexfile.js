@@ -4,7 +4,7 @@ dotenv.config();
 
 const config = {
   development: {
-    client: 'pg',
+    client: process.env.CLIENT_DB,
     connection: process.env.DATABASE_URL,
     migrations: {
       tableName: 'knex_migrations',
