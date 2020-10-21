@@ -2,6 +2,7 @@
 import dotenv from 'dotenv';
 
 dotenv.config();
+
 import express from 'express';
 import usuarioRotas from './routers/usuarioRoute';
 import grupoRotas from './routers/grupoRoute';

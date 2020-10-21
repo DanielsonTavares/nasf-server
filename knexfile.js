@@ -1,11 +1,14 @@
-module.exports = {
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+const config = {
   development: {
     client: 'pg',
     connection: process.env.DATABASE_URL,
     migrations: {
       tableName: 'knex_migrations',
-      // directory: `${__dirname}/${process.env.PATH_DIST}/database/migrations`,
-      directory: `${process.env.PATH_DIST}`,
+      directory: `${__dirname}/${process.env.PATH_DIST}/database/migrations`,
     },
     seeds: {
       directory: `${__dirname}/${process.env.PATH_DIST}/database/seeds`,
@@ -45,3 +48,5 @@ module.exports = {
   //   },
   // },
 };
+
+module.exports = config;
