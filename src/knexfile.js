@@ -1,13 +1,11 @@
 // Update with your config settings.
+import dotenv from 'dotenv';
+dotenv.config();
 
 module.exports = {
   development: {
     client: 'pg',
-    connection: {
-      database: 'nasfdb',
-      user: 'postgres',
-      password: '123456',
-    },
+    connection: process.env.DATABASE_URL,
     migrations: {
       tableName: 'knex_migrations',
       directory: `${__dirname}/src/database/migrations`,
