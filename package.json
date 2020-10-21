@@ -2,6 +2,9 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": "12.13.1"
+  },
   "main": "src/index.ts",
   "dependencies": {
     "dotenv": "^8.2.0",
