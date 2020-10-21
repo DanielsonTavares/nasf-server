@@ -25,7 +25,7 @@
   "scripts": {
     "dev": "ts-node-dev src/server.ts",
     "build": "tsc",
-    "start": "knex migrate:latest && node ./dist/src/server.js"
+    "start": "node ./dist/src/server.js"
   },
   "keywords": [],
   "author": "danielson",
