@@ -1,6 +1,3 @@
-// Update with your config settings.
-import dotenv from 'dotenv';
-dotenv.config();
 
 module.exports = {
   development: {
