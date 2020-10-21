@@ -2,47 +2,47 @@
 
 module.exports = {
   development: {
-    client: "pg",
+    client: 'pg',
     connection: {
-      database: "nasfdb",
-      user: "postgres",
-      password: "123456",
+      database: 'nasfdb',
+      user: 'postgres',
+      password: '123456',
     },
     migrations: {
-      tableName: "knex_migrations",
+      tableName: 'knex_migrations',
       directory: `${__dirname}/src/database/migrations`,
     },
   },
 
   staging: {
-    client: "postgresql",
+    client: 'postgresql',
     connection: {
-      database: "my_db",
-      user: "username",
-      password: "password",
+      database: 'my_db',
+      user: 'username',
+      password: 'password',
     },
     pool: {
       min: 2,
       max: 10,
     },
     migrations: {
-      tableName: "knex_migrations",
+      tableName: 'knex_migrations',
     },
   },
 
   production: {
-    client: "postgresql",
+    client: 'postgresql',
     connection: {
-      database: "my_db",
-      user: "username",
-      password: "password",
+      database: 'my_db',
+      user: 'username',
+      password: 'password',
     },
     pool: {
       min: 2,
       max: 10,
     },
     migrations: {
-      tableName: "knex_migrations",
+      tableName: 'knex_migrations',
     },
   },
 };
