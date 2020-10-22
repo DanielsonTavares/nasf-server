@@ -3,7 +3,7 @@ import knex from '../database';
 
 class UsuarioController {
   async post(request: Request, response: Response) {
-    response.status(201).send('Rota POST');
+    response.status(201).json({ rota: 'Rota POST', body: request.body });
   }
 
   async put(request: Request, response: Response) {
