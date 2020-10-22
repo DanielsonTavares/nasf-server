@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
 
-dotenv.config({ path: './' });
+dotenv.config();
 
 const config = {
   development: {
