@@ -15,7 +15,18 @@ const config = {
 
     },
   },
+  production: {
+    client: process.env.CLIENT_DB,
+    connection: process.env.DATABASE_URL,
+    migrations: {
+      tableName: 'knex_migrations',
+      directory: `${__dirname}/${process.env.PATH_DIST}/database/migrations`,
+    },
+    seeds: {
+      directory: `${__dirname}/${process.env.PATH_DIST}/database/seeds`,
 
+    },
+  },
   // staging: {
   //   client: 'postgresql',
   //   connection: {
