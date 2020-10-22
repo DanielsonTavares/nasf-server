@@ -1,10 +1,9 @@
 import express from 'express';
-import knexfile from '../../knexfile';
 
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
-  res.json({ message: 'pagina inicial', txt: knexfile.development });
+  res.json({ message: 'pagina inicial' });
   next();
 });
 
