@@ -3,7 +3,15 @@ import knex from '../database';
 
 class UsuarioController {
   async post(request: Request, response: Response) {
-    response.status(201).json({ rota: 'Rota POST', body: request.body });
+    try {
+      const { nome } = request.body;
+
+      await knex('usuario').insert({ nome });
+
+      response.status(201).json({ message: 'Recurso criado com sucesso', body: request.body });
+    } catch (error) {
+      response.status(500).json({ message: `${error.severity} - ${error.detail}` });
+    }
   }
 
   async put(request: Request, response: Response) {
@@ -17,7 +25,9 @@ class UsuarioController {
   }
 
   async get(request: Request, response: Response) {
-    response.status(200).send('Rota GET');
+    const result = await knex('usuario').select('nome');
+
+    response.status(200).send(response.json({ result }));
   }
 
   async getById(request: Request, response: Response) {
