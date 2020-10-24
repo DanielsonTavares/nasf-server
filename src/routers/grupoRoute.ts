@@ -8,7 +8,7 @@ const usuarioController = new GrupoController();
 
 router.post('/grupo', usuarioController.post);
 router.put('/grupo/:id', usuarioController.put);
-router.delete('/grupo/:id', usuarioController.delete);
+router.delete('/grupo', usuarioController.delete);
 router.get('/grupo', usuarioController.get);
 router.get('/grupo/:id', usuarioController.getById);
 
