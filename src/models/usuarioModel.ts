@@ -6,6 +6,7 @@ interface IUsuario {
   login: String;
   senha: String;
   email: String;
+  data_atualizacao: Date;
 }
 
 class Usuario {
@@ -24,6 +25,7 @@ class Usuario {
   }
 
   async update() {
+    this.usu.data_atualizacao = new Date();
     await knex('usuario').where('id', this.usu.id).update(this.usu);
   }
 
