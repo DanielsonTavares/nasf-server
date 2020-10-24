@@ -7,7 +7,7 @@ const router = express.Router();
 const usuarioController = new GrupoController();
 
 router.post('/grupo', usuarioController.post);
-router.put('/grupo/:id', usuarioController.put);
+router.put('/grupo', usuarioController.put);
 router.delete('/grupo', usuarioController.delete);
 router.get('/grupo', usuarioController.get);
 router.get('/grupo/:id', usuarioController.getById);

@@ -1,6 +1,13 @@
 import { Request, Response } from 'express';
 import Grupo from '../models/grupoModel';
 
+async function verificaExistencia(id: String, response: Response) {
+  const result = await Grupo.findById(id);
+  if (!result) {
+    response.status(404).json({ message: `Não foi encontrato registro para o id ${id}` });
+  }
+}
+
 class GrupoController {
   async post(request: Request, response: Response) {
     try {
@@ -19,6 +26,8 @@ class GrupoController {
   async put(request: Request, response: Response) {
     const { body } = request;
 
+    await verificaExistencia(body.id, response);
+
     const grupo = new Grupo(body);
 
     await grupo.update();
@@ -30,6 +39,8 @@ class GrupoController {
     const { body } = request;
 
     try {
+      await verificaExistencia(body.id, response);
+
       const grupo = new Grupo(body);
       grupo.delete();
 
@@ -53,11 +64,9 @@ class GrupoController {
   async getById(request: Request, response: Response) {
     const { id } = request.params;
 
-    const result = await Grupo.findById(id);
+    await verificaExistencia(id, response);
 
-    if (!result) {
-      response.status(404).json({ message: `Não foi encontrato registro para o id ${id}` });
-    }
+    const result = await Grupo.findById(id);
 
     response.status(200).json(result);
   }

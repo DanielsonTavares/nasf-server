@@ -1,6 +1,13 @@
 import { Request, Response } from 'express';
 import Usuario from '../models/usuarioModel';
 
+async function verificaExistencia(id: String, response: Response) {
+  const result = await Usuario.findById(id);
+  if (!result) {
+    response.status(404).json({ message: `Não foi encontrato registro para o id ${id}` });
+  }
+}
+
 class UsuarioController {
   async post(request: Request, response: Response) {
     try {
@@ -19,6 +26,8 @@ class UsuarioController {
   async put(request: Request, response: Response) {
     const { body } = request;
 
+    await verificaExistencia(body.id, response);
+
     const usuario = new Usuario(body);
 
     await usuario.update();
@@ -30,6 +39,8 @@ class UsuarioController {
     const { body } = request;
 
     try {
+      await verificaExistencia(body.id, response);
+
       const usuario = new Usuario(body);
       usuario.delete();
 
@@ -54,11 +65,9 @@ class UsuarioController {
   async getById(request: Request, response: Response) {
     const { id } = request.params;
 
-    const result = await Usuario.findById(id);
+    await verificaExistencia(id, response);
 
-    if (!result) {
-      response.status(404).json({ message: `Não foi encontrato registro para o id ${id}` });
-    }
+    const result = await Usuario.findById(id);
 
     response.status(200).json(result);
   }
