@@ -7,8 +7,8 @@ const router = express.Router();
 const usuarioController = new UsuarioController();
 
 router.post('/usuario', usuarioController.post);
-router.put('/usuario/:id', usuarioController.put);
-router.delete('/usuario/:id', usuarioController.delete);
+router.put('/usuario', usuarioController.put);
+router.delete('/usuario', usuarioController.delete);
 router.get('/usuario', usuarioController.get);
 router.get('/usuario/:id', usuarioController.getById);
 
