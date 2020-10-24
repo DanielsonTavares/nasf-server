@@ -9,10 +9,14 @@ interface IUsuario {
 }
 
 class Usuario {
-  usu: IUsuario;
+  private usu: IUsuario;
 
   constructor(param: IUsuario) {
     this.usu = param;
+  }
+
+  getNome() {
+    return this.usu.login;
   }
 
   async create() {
@@ -39,6 +43,16 @@ class Usuario {
     }
 
     return knex('usuario').where({ id }).select('*');
+  }
+
+  async login() {
+    const qryResult = await knex('usuario').where({ login: this.usu.login, senha: this.usu.senha }).count('login');
+
+    if (qryResult[0].count <= 0) {
+      return false;
+    }
+
+    return true;
   }
 }
 

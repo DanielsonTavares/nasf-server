@@ -11,5 +11,6 @@ router.put('/usuario', usuarioController.put);
 router.delete('/usuario', usuarioController.delete);
 router.get('/usuario', usuarioController.get);
 router.get('/usuario/:id', usuarioController.getById);
+router.post('/usuario/login', usuarioController.login);
 
 export default router;

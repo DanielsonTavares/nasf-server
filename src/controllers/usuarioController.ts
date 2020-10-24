@@ -62,6 +62,19 @@ class UsuarioController {
 
     response.status(200).json(result);
   }
+
+  async login(request: Request, response: Response) {
+    const { body } = request;
+
+    const usuario = new Usuario(body);
+    const isLogado = await usuario.login();
+
+    if (isLogado) {
+      response.status(200).json({ message: `${usuario.getNome()} logado com sucesso` });
+    } else {
+      response.status(401).json({ message: `${usuario.getNome()} nao logado` });
+    }
+  }
 }
 
 export default UsuarioController;
