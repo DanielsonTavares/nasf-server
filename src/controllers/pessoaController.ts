@@ -16,9 +16,9 @@ class PessoaController {
       const pessoa = new Pessoa(body);
       await pessoa.create();
 
-      response.status(201).json({ message: 'Recurso criado com sucesso', body });
+      response.status(201).json({ ok: true, message: 'Recurso criado com sucesso', body });
     } catch (error) {
-      response.status(500).json({ message: `${error.severity} - ${error.detail}` });
+      response.status(500).json({ ok: false, mensagem: 'Não foi possível criar o recurso', detalhes: error });
       console.log(`error ==> ${error}`);
     }
   }
@@ -32,7 +32,7 @@ class PessoaController {
 
     await pessoa.update();
 
-    response.status(201).json({ message: 'Atualizado com sucesso' });
+    response.status(201).json({ ok: true, message: 'Atualizado com sucesso' });
   }
 
   async delete(request: Request, response: Response) {
@@ -44,9 +44,9 @@ class PessoaController {
       const pessoa = new Pessoa(body);
       pessoa.delete();
 
-      response.status(200).json({ message: 'exclusão realizada com sucesso' });
+      response.status(200).json({ ok: true, message: 'exclusão realizada com sucesso' });
     } catch (error) {
-      response.status(500).json({ message: `${error.severity} - ${error.detail}` });
+      response.status(500).json({ ok: false, message: `${error.severity} - ${error.detail}` });
       console.log(`error ==> ${error}`);
     }
   }
@@ -56,7 +56,7 @@ class PessoaController {
       const result = await Pessoa.findAll();
       response.status(200).json({ result });
     } catch (error) {
-      response.status(500).json({ message: `${error.severity} - ${error.detail}` });
+      response.status(500).json({ ok: false, message: `${error.severity} - ${error.detail}` });
       console.log(`error ==> ${error}`);
     }
   }
