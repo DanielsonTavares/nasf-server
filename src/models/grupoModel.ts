@@ -1,4 +1,5 @@
 import knex from '../database';
+import ErrorHandler from './Erro';
 
 interface IGrupo {
   id: String;
@@ -19,30 +20,64 @@ class Grupo {
   }
 
   async create() {
-    await knex('grupo').insert(this.grupo);
+    try {
+      await knex('grupo').insert(this.grupo);
+    } catch (e) {
+      throw new ErrorHandler(500, e);
+    }
   }
 
   async update() {
-    this.grupo.data_atualizacao = new Date();
-    await knex('grupo').where('id', this.grupo.id).update(this.grupo);
+    try {
+      this.grupo.data_atualizacao = new Date();
+      await knex('grupo').where('id', this.grupo.id).update(this.grupo);
+    } catch (e) {
+      throw new ErrorHandler(500, e);
+    }
   }
 
   async delete() {
-    await knex('grupo').where('id', this.grupo.id).del();
+    try {
+      await knex('grupo').where('id', this.grupo.id).del();
+    } catch (e) {
+      throw new ErrorHandler(500, e);
+    }
   }
 
   static async findAll(): Promise<IGrupo[]> {
-    return knex('grupo').select('*');
+    try {
+      return knex('grupo').select('*');
+    } catch (e) {
+      throw new ErrorHandler(500, e);
+    }
   }
 
   static async findById(id: String) {
-    const qryResult = await knex('grupo').where('id', id).count('id');
+    try {
+      const qryResult = await knex('grupo').where('id', id).count('id');
 
-    if (qryResult[0].count <= 0) {
-      return null;
+      if (qryResult[0].count <= 0) {
+        return null;
+      }
+
+      return knex('grupo').where({ id }).select('*');
+    } catch (e) {
+      throw new ErrorHandler(500, e);
+    }
+  }
+
+  static async findOne(id: String): Promise<boolean> {
+    try {
+      const qryResult = await knex('grupo').where('id', id).count('id');
+
+      if (qryResult[0].count <= 0) {
+        return false;
+      }
+    } catch (e) {
+      throw new ErrorHandler(500, e);
     }
 
-    return knex('grupo').where({ id }).select('*');
+    return true;
   }
 }
 

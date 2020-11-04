@@ -1,74 +1,91 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import Grupo from '../models/grupoModel';
+import ErrorHandler from '../models/Erro';
 
-async function verificaExistencia(id: String, response: Response) {
-  const result = await Grupo.findById(id);
+async function verificaExistencia(id: String) {
+  const result = await Grupo.findOne(id);
   if (!result) {
-    response.status(404).json({ message: `Não foi encontrato registro para o id ${id}` });
+    throw new ErrorHandler(404, 'Não foi encontrato registro para o id');
   }
 }
 
 class GrupoController {
-  async post(request: Request, response: Response) {
+  async post(request: Request, response: Response, next: NextFunction) {
     try {
       const { body } = request;
 
+      if (!body.nome) {
+        throw new ErrorHandler(400, 'Nome não informado. ');
+      }
+
+      const str: string = body.nome;
+
+      if (str.length <= 3) {
+        throw new ErrorHandler(400, 'Nome muito curto. ');
+      }
+
       const grupo = new Grupo(body);
+
       await grupo.create();
 
       response.status(201).json({ ok: true, message: 'Recurso criado com sucesso', body });
-    } catch (error) {
-      response.status(500).json({ ok: false, message: `${error.severity} - ${error.detail}` });
-      console.log(`error ==> ${error}`);
+    } catch (e) {
+      next(e);
     }
   }
 
-  async put(request: Request, response: Response) {
-    const { body } = request;
+  async put(request: Request, response: Response, next: NextFunction) {
+    try {
+      const { body } = request;
 
-    await verificaExistencia(body.id, response);
+      await verificaExistencia(body.id);
 
-    const grupo = new Grupo(body);
+      const grupo = new Grupo(body);
 
-    await grupo.update();
+      await grupo.update();
 
-    response.status(201).json({ ok: true, message: 'Atualizado com sucesso' });
+      response.status(201).json({ ok: true, message: 'Atualizado com sucesso' });
+    } catch (e) {
+      next(e);
+    }
   }
 
-  async delete(request: Request, response: Response) {
-    const { body } = request;
-
+  async delete(request: Request, response: Response, next: NextFunction) {
     try {
-      await verificaExistencia(body.id, response);
+      const { body } = request;
+      await verificaExistencia(body.id);
 
       const grupo = new Grupo(body);
       grupo.delete();
 
       response.status(200).json({ ok: true, message: 'exclusão realizada com sucesso' });
-    } catch (error) {
-      response.status(500).json({ ok: false, message: `${error.severity} - ${error.detail}` });
-      console.log(`error ==> ${error}`);
+    } catch (e) {
+      next(e);
     }
   }
 
-  async get(request: Request, response: Response) {
+  async get(request: Request, response: Response, next: NextFunction) {
     try {
       const result = await Grupo.findAll();
       response.status(200).json({ result });
-    } catch (error) {
-      response.status(500).json({ ok: false, message: `${error.severity} - ${error.detail}` });
-      console.log(`error ==> ${error}`);
+    } catch (e) {
+      throw new ErrorHandler(500, e);
     }
+    next();
   }
 
-  async getById(request: Request, response: Response) {
-    const { id } = request.params;
+  async getById(request: Request, response: Response, next: NextFunction) {
+    try {
+      const { id } = request.params;
 
-    await verificaExistencia(id, response);
+      await verificaExistencia(id);
 
-    const result = await Grupo.findById(id);
+      const result = await Grupo.findById(id);
 
-    response.status(200).json(result);
+      response.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
   }
 }
 
