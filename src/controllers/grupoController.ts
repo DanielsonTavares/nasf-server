@@ -69,9 +69,9 @@ class GrupoController {
       const result = await Grupo.findAll();
       response.status(200).json({ result });
     } catch (e) {
-      throw new ErrorHandler(500, e);
+      // throw new ErrorHandler(500, e);
+      next();
     }
-    next();
   }
 
   async getById(request: Request, response: Response, next: NextFunction) {

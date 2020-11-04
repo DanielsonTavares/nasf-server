@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import Pessoa from '../models/pessoaModel';
 
 async function verificaExistencia(id: String, response: Response) {
@@ -9,7 +9,7 @@ async function verificaExistencia(id: String, response: Response) {
 }
 
 class PessoaController {
-  async post(request: Request, response: Response) {
+  async post(request: Request, response: Response, next: NextFunction) {
     try {
       const { body } = request;
 
@@ -20,10 +20,11 @@ class PessoaController {
     } catch (error) {
       response.status(500).json({ ok: false, mensagem: 'Não foi possível criar o recurso', detalhes: error });
       console.log(`error ==> ${error}`);
+      next();
     }
   }
 
-  async put(request: Request, response: Response) {
+  async put(request: Request, response: Response, next: NextFunction) {
     const { body } = request;
 
     await verificaExistencia(body.id, response);
@@ -33,9 +34,10 @@ class PessoaController {
     await pessoa.update();
 
     response.status(201).json({ ok: true, message: 'Atualizado com sucesso' });
+    next();
   }
 
-  async delete(request: Request, response: Response) {
+  async delete(request: Request, response: Response, next: NextFunction) {
     const { body } = request;
 
     try {
@@ -49,9 +51,10 @@ class PessoaController {
       response.status(500).json({ ok: false, message: `${error.severity} - ${error.detail}` });
       console.log(`error ==> ${error}`);
     }
+    next();
   }
 
-  async get(request: Request, response: Response) {
+  async get(request: Request, response: Response, next: NextFunction) {
     try {
       const result = await Pessoa.findAll();
       response.status(200).json({ result });
@@ -59,9 +62,10 @@ class PessoaController {
       response.status(500).json({ ok: false, message: `${error.severity} - ${error.detail}` });
       console.log(`error ==> ${error}`);
     }
+    next();
   }
 
-  async getById(request: Request, response: Response) {
+  async getById(request: Request, response: Response, next: NextFunction) {
     const { id } = request.params;
 
     await verificaExistencia(id, response);
@@ -69,6 +73,7 @@ class PessoaController {
     const result = await Pessoa.findById(id);
 
     response.status(200).json(result);
+    next();
   }
 }
 
