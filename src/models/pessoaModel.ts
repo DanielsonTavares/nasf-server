@@ -1,4 +1,5 @@
 import knex from '../database';
+import ErrorHandler from './Erro';
 
 interface IPessoa {
   id: Number;
@@ -35,30 +36,64 @@ class Pessoa {
   }
 
   async create() {
-    await knex('pessoa').insert(this.pessoa);
+    try {
+      await knex('pessoa').insert(this.pessoa);
+    } catch (e) {
+      throw new ErrorHandler(500, e);
+    }
   }
 
   async update() {
-    this.pessoa.data_atualizacao = new Date();
-    await knex('pessoa').where('id', this.pessoa.id).update(this.pessoa);
+    try {
+      this.pessoa.data_atualizacao = new Date();
+      await knex('pessoa').where('id', this.pessoa.id).update(this.pessoa);
+    } catch (e) {
+      throw new ErrorHandler(500, e);
+    }
   }
 
   async delete() {
-    await knex('pessoa').where('id', this.pessoa.id).del();
+    try {
+      await knex('pessoa').where('id', this.pessoa.id).del();
+    } catch (e) {
+      throw new ErrorHandler(500, e);
+    }
   }
 
   static async findAll(): Promise<IPessoa[]> {
-    return knex('pessoa').select('*');
+    try {
+      return await knex('pessoa').select('*');
+    } catch (e) {
+      throw new ErrorHandler(500, e);
+    }
   }
 
   static async findById(id: String) {
-    const qryResult = await knex('pessoa').where('id', id).count('id');
+    try {
+      const qryResult = await knex('pessoa').where('id', id).count('id');
 
-    if (qryResult[0].count <= 0) {
-      return null;
+      if (qryResult[0].count <= 0) {
+        return null;
+      }
+
+      return await knex('pessoa').where({ id }).select('*');
+    } catch (e) {
+      throw new ErrorHandler(500, e);
+    }
+  }
+
+  static async findOne(id: String): Promise<boolean> {
+    try {
+      const qryResult = await knex('pessoa').where('id', id).count('id');
+
+      if (qryResult[0].count <= 0) {
+        return false;
+      }
+    } catch (e) {
+      throw new ErrorHandler(500, e);
     }
 
-    return knex('pessoa').where({ id }).select('*');
+    return true;
   }
 }
 

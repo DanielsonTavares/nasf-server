@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
+import ErrorHandler from '../models/Erro';
 import Pessoa from '../models/pessoaModel';
 
-async function verificaExistencia(id: String, response: Response) {
-  const result = await Pessoa.findById(id);
+async function verificaExistencia(id: String) {
+  const result = await Pessoa.findOne(id);
   if (!result) {
-    response.status(404).json({ message: `Não foi encontrato registro para o id ${id}` });
+    throw new ErrorHandler(404, 'Não foi encontrado registro para o id');
   }
 }
 
@@ -17,63 +18,62 @@ class PessoaController {
       await pessoa.create();
 
       response.status(201).json({ ok: true, message: 'Recurso criado com sucesso', body });
-    } catch (error) {
-      response.status(500).json({ ok: false, mensagem: 'Não foi possível criar o recurso', detalhes: error });
-      console.log(`error ==> ${error}`);
-      next();
+    } catch (e) {
+      next(e);
     }
   }
 
   async put(request: Request, response: Response, next: NextFunction) {
-    const { body } = request;
+    try {
+      const { body } = request;
 
-    await verificaExistencia(body.id, response);
+      await verificaExistencia(body.id);
 
-    const pessoa = new Pessoa(body);
+      const grupo = new Pessoa(body);
 
-    await pessoa.update();
+      await grupo.update();
 
-    response.status(201).json({ ok: true, message: 'Atualizado com sucesso' });
-    next();
+      response.status(201).json({ ok: true, message: 'Atualizado com sucesso' });
+    } catch (e) {
+      next(e);
+    }
   }
 
   async delete(request: Request, response: Response, next: NextFunction) {
-    const { body } = request;
-
     try {
-      await verificaExistencia(body.id, response);
+      const { body } = request;
+      await verificaExistencia(body.id);
 
-      const pessoa = new Pessoa(body);
-      pessoa.delete();
+      const grupo = new Pessoa(body);
+      grupo.delete();
 
       response.status(200).json({ ok: true, message: 'exclusão realizada com sucesso' });
-    } catch (error) {
-      response.status(500).json({ ok: false, message: `${error.severity} - ${error.detail}` });
-      console.log(`error ==> ${error}`);
+    } catch (e) {
+      next(e);
     }
-    next();
   }
 
   async get(request: Request, response: Response, next: NextFunction) {
     try {
       const result = await Pessoa.findAll();
       response.status(200).json({ result });
-    } catch (error) {
-      response.status(500).json({ ok: false, message: `${error.severity} - ${error.detail}` });
-      console.log(`error ==> ${error}`);
+    } catch (e) {
+      next(e);
     }
-    next();
   }
 
   async getById(request: Request, response: Response, next: NextFunction) {
-    const { id } = request.params;
+    try {
+      const { id } = request.params;
 
-    await verificaExistencia(id, response);
+      await verificaExistencia(id);
 
-    const result = await Pessoa.findById(id);
+      const result = await Pessoa.findById(id);
 
-    response.status(200).json(result);
-    next();
+      response.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
   }
 }
 
