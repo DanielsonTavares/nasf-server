@@ -5,7 +5,7 @@ import ErrorHandler from '../models/Erro';
 async function verificaExistencia(id: String) {
   const result = await Grupo.findOne(id);
   if (!result) {
-    throw new ErrorHandler(404, 'Não foi encontrato registro para o id');
+    throw new ErrorHandler(404, 'Não foi encontrado registro para o id');
   }
 }
 
@@ -70,7 +70,7 @@ class GrupoController {
       response.status(200).json({ result });
     } catch (e) {
       // throw new ErrorHandler(500, e);
-      next();
+      next(e);
     }
   }
 

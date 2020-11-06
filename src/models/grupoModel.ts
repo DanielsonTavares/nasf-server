@@ -46,7 +46,7 @@ class Grupo {
 
   static async findAll(): Promise<IGrupo[]> {
     try {
-      return knex('grupo').select('*');
+      return await knex('grupo').select('*');
     } catch (e) {
       throw new ErrorHandler(500, e);
     }
@@ -60,7 +60,7 @@ class Grupo {
         return null;
       }
 
-      return knex('grupo').where({ id }).select('*');
+      return await knex('grupo').where({ id }).select('*');
     } catch (e) {
       throw new ErrorHandler(500, e);
     }
