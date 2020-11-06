@@ -1,5 +1,7 @@
 /* eslint-disable no-undef */
 
+import request from 'supertest';
+import app from '../../src/app';
 import UsuarioModel from '../../src/models/usuarioModel';
 
 const limpa = async () => {
@@ -10,18 +12,8 @@ const limpa = async () => {
     senha: '01',
   };
 
-  const usu02 = {
-    email: 'usuario01@email.com',
-    login: 'usuario02',
-    nome: 'usuario zero um',
-    senha: '01',
-  };
-
   const usuario01 = new UsuarioModel(usu01);
   await usuario01.delete();
-
-  const usuario02 = new UsuarioModel(usu02);
-  await usuario02.delete();
 };
 
 limpa();
@@ -71,8 +63,13 @@ describe('UsuarioModel', () => {
     expect(result).toBe(false);
   });
 
-  it('Deve recuperar um usuário com ID 20', async () => {
-    const result = await UsuarioModel.findById('20');
-    expect(result[0].login).toBe('dan');
+  it('Deve recuperar um usuário com ID 20', async (done) => {
+    // const result = await UsuarioModel.findById('20');
+    // expect(result[0].login).toBe('dan');
+    const response = await request(app).get('/usuario/20');
+
+    expect(response.status).toBe(200);
+
+    done();
   });
 });
