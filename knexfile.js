@@ -15,6 +15,18 @@ const config = {
 
     },
   },
+  test: {
+    client: process.env.CLIENT_DB,
+    connection: 'postgres://postgres:123456@localhost/nasfdb_test',
+    migrations: {
+      tableName: 'knex_migrations',
+      directory: `${__dirname}/${process.env.PATH_DIST}/database/migrations`,
+    },
+    seeds: {
+      directory: `${__dirname}/${process.env.PATH_DIST}/database/seeds`,
+
+    },
+  },
   production: {
     client: process.env.CLIENT_DB,
     connection: process.env.DATABASE_URL,
