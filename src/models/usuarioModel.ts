@@ -2,12 +2,12 @@ import knex from '../database';
 import ErrorHandler from './Erro';
 
 interface IUsuario {
-  id: Number,
+  id?: Number,
   nome: String;
   login: String;
   senha: String;
   email: String;
-  data_atualizacao: Date;
+  data_atualizacao?: Date;
 }
 
 class Usuario {
@@ -21,18 +21,27 @@ class Usuario {
     return this.usu.login;
   }
 
-  async create() {
+  async create(): Promise<IUsuario> {
     try {
       await knex('usuario').insert(this.usu);
+      return this.usu;
     } catch (e) {
       throw new ErrorHandler(500, e);
     }
   }
 
-  async update() {
+  async update(): Promise<IUsuario> {
     try {
       this.usu.data_atualizacao = new Date();
-      await knex('usuario').where('id', this.usu.id).update(this.usu);
+      if (this.usu.id) {
+        await knex('usuario').where('id', this.usu.id).update(this.usu);
+      } else if (this.usu.login) {
+        await knex('usuario').where('login', this.usu.login).update(this.usu);
+      } else {
+        throw new ErrorHandler(400, 'Id ou login deve ser informado');
+      }
+
+      return this.usu;
     } catch (e) {
       throw new ErrorHandler(500, e);
     }
@@ -40,7 +49,16 @@ class Usuario {
 
   async delete() {
     try {
-      await knex('usuario').where('id', this.usu.id).del();
+      let id: Number = 0;
+
+      if (this.usu.id) {
+        id = this.usu.id;
+        await knex('usuario').where('id', id).del();
+      } else if (this.usu.login) {
+        await knex('usuario').where('login', this.usu.login).del();
+      } else {
+        throw new ErrorHandler(400, 'Id ou login deve ser informado');
+      }
     } catch (e) {
       throw new ErrorHandler(500, e);
     }
@@ -54,15 +72,15 @@ class Usuario {
     }
   }
 
-  static async findById(id: String) {
+  static async findById(id: String): Promise<IUsuario[]> {
     try {
-      const qryResult = await knex('usuario').where('id', id).count('id');
+      // const qryResult = await knex('usuario').where('id', id).count('id');
 
-      if (qryResult[0].count <= 0) {
-        return null;
-      }
+      // if (qryResult[0].count <= 0) {
+      //   return {};
+      // }
 
-      return knex('usuario').where({ id }).select('*');
+      return await knex('usuario').where({ id }).select('*');
     } catch (e) {
       throw new ErrorHandler(500, e);
     }
