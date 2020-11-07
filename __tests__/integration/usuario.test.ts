@@ -22,7 +22,7 @@ describe('UsuarioModel', () => {
     };
 
     const response = await request(app)
-      .post('/usuario')
+      .post('/usuarios')
       .send(usu);
 
     expect(response.status).toBe(201);
@@ -49,7 +49,7 @@ describe('UsuarioModel', () => {
     };
 
     const response = await request(app)
-      .post('/usuario')
+      .post('/usuarios')
       .send(usu);
 
     expect(response.status).toBe(400);
@@ -69,7 +69,7 @@ describe('UsuarioModel', () => {
     };
 
     const response = await request(app)
-      .post('/usuario')
+      .post('/usuarios')
       .send(usu);
 
     expect(response.status).toBe(500);
@@ -86,7 +86,7 @@ describe('UsuarioModel', () => {
   //   };
 
   //   const response = await request(app)
-  //     .put('/usuario')
+  //     .put('/usuarios')
   //     .send(usu);
 
   //   expect(response.status).toBe(201);
@@ -106,7 +106,7 @@ describe('UsuarioModel', () => {
     };
 
     const response = await request(app)
-      .post('/usuario')
+      .post('/usuarios')
       .send(usu);
 
     expect(response.status).toBe(201);
@@ -119,7 +119,7 @@ describe('UsuarioModel', () => {
     const usuUpdate = { ...resp.body.data, senha: 'qqq' };
 
     const responseUpdate = await request(app)
-      .put('/usuario')
+      .put('/usuarios')
       .send({ data: usuUpdate });
 
     expect(responseUpdate.status).toBe(201);
@@ -140,7 +140,7 @@ describe('UsuarioModel', () => {
     };
 
     const response = await request(app)
-      .put('/usuario')
+      .put('/usuarios')
       .send(usu);
 
     expect(response.status).toBe(404);
@@ -159,7 +159,7 @@ describe('UsuarioModel', () => {
     };
 
     const response = await request(app)
-      .put('/usuario')
+      .put('/usuarios')
       .send(usu);
 
     expect(response.status).toBe(500);
@@ -173,7 +173,7 @@ describe('UsuarioModel', () => {
     };
 
     const response = await request(app)
-      .delete('/usuario')
+      .delete('/usuarios')
       .send(usu);
 
     expect(response.status).toBe(200);
@@ -188,7 +188,7 @@ describe('UsuarioModel', () => {
     };
 
     const response = await request(app)
-      .delete('/usuario')
+      .delete('/usuarios')
       .send(usu);
 
     expect(response.status).toBe(404);
@@ -217,15 +217,15 @@ describe('UsuarioModel', () => {
     };
 
     await request(app)
-      .post('/usuario')
+      .post('/usuarios')
       .send(usu01);
 
     await request(app)
-      .post('/usuario')
+      .post('/usuarios')
       .send(usu02);
 
     const response = await request(app)
-      .get('/usuario');
+      .get('/usuarios');
 
     expect(response.status).toBe(200);
     expect(response.body.result.length).toBeGreaterThan(1);
@@ -235,7 +235,7 @@ describe('UsuarioModel', () => {
 
   it('Deve recuperar um usuário pelo id', async (done) => {
     const response = await request(app)
-      .get('/usuario/3');
+      .get('/usuarios/3');
 
     expect(response.status).toBe(200);
     expect(response.body.data).toBeTruthy();
@@ -246,7 +246,7 @@ describe('UsuarioModel', () => {
 
   it('Deve criticar ao tentar recuperar um usuário com id inexistente', async (done) => {
     const response = await request(app)
-      .get('/usuario/99');
+      .get('/usuarios/99');
 
     expect(response.status).toBe(404);
     expect(response.body.message).toBe('Não foi encontrado registro para o id');
@@ -265,7 +265,7 @@ describe('UsuarioModel', () => {
     };
 
     const response = await request(app)
-      .post('/usuario/login')
+      .post('/usuarios/login')
       .send(usu);
 
     expect(response.status).toBe(200);
@@ -285,7 +285,7 @@ describe('UsuarioModel', () => {
     };
 
     const response = await request(app)
-      .post('/usuario/login')
+      .post('/usuarios/login')
       .send(usu);
 
     expect(response.status).toBe(400);
@@ -305,7 +305,7 @@ describe('UsuarioModel', () => {
     };
 
     const response = await request(app)
-      .post('/usuario/login')
+      .post('/usuarios/login')
       .send(usu);
 
     expect(response.status).toBe(401);

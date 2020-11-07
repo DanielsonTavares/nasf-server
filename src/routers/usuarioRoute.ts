@@ -6,11 +6,11 @@ const router = express.Router();
 
 const usuarioController = new UsuarioController();
 
-router.post('/usuario', usuarioController.post);
-router.put('/usuario', usuarioController.put);
-router.delete('/usuario', usuarioController.delete);
-router.get('/usuario', usuarioController.get);
-router.get('/usuario/:id', usuarioController.getById);
-router.post('/usuario/login', usuarioController.login);
+router.post('/usuarios', usuarioController.post);
+router.put('/usuarios', usuarioController.put);
+router.delete('/usuarios', usuarioController.delete);
+router.get('/usuarios', usuarioController.get);
+router.get('/usuarios/:id', usuarioController.getById);
+router.post('/usuarios/login', usuarioController.login);
 
 export default router;
