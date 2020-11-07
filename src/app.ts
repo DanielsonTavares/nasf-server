@@ -10,8 +10,6 @@ import indexRotas from './routers/indexRoute';
 import pessoaRotas from './routers/pessoaRoute';
 import { handleError } from './models/Erro';
 
-console.log(`process.env.NODE_ENV ==> ${process.env.NODE_ENV}`);
-
 const app = express();
 app.use(bodyParser.json());
 app.use(urlencoded({ extended: true }));
