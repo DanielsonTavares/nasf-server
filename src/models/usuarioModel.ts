@@ -33,15 +33,14 @@ class Usuario {
   async update(): Promise<IUsuario> {
     try {
       this.usu.data_atualizacao = new Date();
+      let result = [];
       if (this.usu.id) {
-        await knex('usuario').where('id', this.usu.id).update(this.usu);
-        // } else if (this.usu.login) {
-        //   await knex('usuario').where('login', this.usu.login).update(this.usu);
+        result = await knex('usuario').where('id', this.usu.id).update(this.usu, '*');
       } else {
         throw new ErrorHandler(400, 'Id ou login deve ser informado');
       }
 
-      return this.usu;
+      return result[0];
     } catch (e) {
       throw new ErrorHandler(500, e);
     }

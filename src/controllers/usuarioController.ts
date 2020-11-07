@@ -29,15 +29,15 @@ class UsuarioController {
 
   async put(request: Request, response: Response, next: NextFunction) {
     try {
-      const { body } = request;
+      const { data } = request.body;
 
-      await verificaExistencia(body.id);
+      await verificaExistencia(data.id);
 
-      const usuario = new Usuario(body);
+      const usuario = new Usuario(data);
 
       await usuario.update();
 
-      response.status(201).json({ ok: true, message: 'Atualizado com sucesso' });
+      response.status(201).json({ data });
     } catch (e) {
       next(e);
     }
