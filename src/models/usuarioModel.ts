@@ -74,13 +74,9 @@ class Usuario {
 
   static async findById(id: String): Promise<IUsuario[]> {
     try {
-      // const qryResult = await knex('usuario').where('id', id).count('id');
+      const result = await knex('usuario').where({ id }).select('*');
 
-      // if (qryResult[0].count <= 0) {
-      //   return {};
-      // }
-
-      return await knex('usuario').where({ id }).select('*');
+      return result[0];
     } catch (e) {
       throw new ErrorHandler(500, e);
     }

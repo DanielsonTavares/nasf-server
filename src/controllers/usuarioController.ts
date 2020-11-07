@@ -75,7 +75,7 @@ class UsuarioController {
 
       const result = await Usuario.findById(id);
 
-      response.status(200).json(result);
+      response.status(200).json({ data: result });
     } catch (e) {
       next(e);
     }
