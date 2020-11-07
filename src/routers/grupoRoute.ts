@@ -6,10 +6,10 @@ const router = express.Router();
 
 const grupoController = new GrupoController();
 
-router.post('/grupo', grupoController.post);
-router.put('/grupo', grupoController.put);
-router.delete('/grupo', grupoController.delete);
-router.get('/grupo', grupoController.get);
-router.get('/grupo/:id', grupoController.getById);
+router.post('/grupos', grupoController.post);
+router.put('/grupos', grupoController.put);
+router.delete('/grupos', grupoController.delete);
+router.get('/grupos', grupoController.get);
+router.get('/grupos/:id', grupoController.getById);
 
 export default router;

@@ -6,10 +6,10 @@ const router = express.Router();
 
 const pessoaController = new PessoaController();
 
-router.post('/pessoa', pessoaController.post);
-router.put('/pessoa', pessoaController.put);
-router.delete('/pessoa', pessoaController.delete);
-router.get('/pessoa', pessoaController.get);
-router.get('/pessoa/:id', pessoaController.getById);
+router.post('/pessoas', pessoaController.post);
+router.put('/pessoas', pessoaController.put);
+router.delete('/pessoas', pessoaController.delete);
+router.get('/pessoas', pessoaController.get);
+router.get('/pessoas/:id', pessoaController.getById);
 
 export default router;
