@@ -13,10 +13,12 @@ describe('UsuarioModel', () => {
 
   it('Deve inserir um usuario com login usuario01', async (done) => {
     const usu = {
-      email: 'usuario01@email.com',
-      login: 'usuario01',
-      nome: 'usuario zero um',
-      senha: '01',
+      data: {
+        email: 'usuario01@email.com',
+        login: 'usuario01',
+        nome: 'usuario zero um',
+        senha: '01',
+      },
     };
 
     const response = await request(app)
@@ -25,16 +27,25 @@ describe('UsuarioModel', () => {
 
     expect(response.status).toBe(201);
     expect(response.body).toBeTruthy();
+    expect(response.body).toHaveProperty('location');
+
+    const resp = await request(app)
+      .get(`${response.body.location}`);
+
+    expect(resp.status).toBe(200);
+    expect(resp.body.data.login).toBe('usuario01');
 
     done();
   });
 
   it('Deve criticar login nulo ao inserir um usuario', async (done) => {
     const usu = {
-      email: 'usuario01@email.com',
-      login: '',
-      nome: 'usuario zero um',
-      senha: '01',
+      data: {
+        email: 'usuario01@email.com',
+        login: '',
+        nome: 'usuario zero um',
+        senha: '01',
+      },
     };
 
     const response = await request(app)
@@ -49,10 +60,12 @@ describe('UsuarioModel', () => {
 
   it('Não deve inserir um usuario já existente', async (done) => {
     const usu = {
-      email: 'usuario01@email.com',
-      login: 'usuario01',
-      nome: 'usuario zero um',
-      senha: '01',
+      data: {
+        email: 'usuario01@email.com',
+        login: 'usuario01',
+        nome: 'usuario zero um',
+        senha: '01',
+      },
     };
 
     const response = await request(app)
@@ -82,31 +95,48 @@ describe('UsuarioModel', () => {
   //   done();
   // });
 
-  it('Deve atualizar a senha do usuario01 para qqq utilizando o id', async (done) => {
+  it('Deve atualizar a senha do usuario01 para qqq', async (done) => {
     const usu = {
-      id: 1,
-      email: 'usuario01@email.com',
-      login: 'usuario01',
-      nome: 'usuario zero um',
-      senha: 'qqq',
+      data: {
+        email: 'usuario04@email.com',
+        login: 'usuario04',
+        nome: 'usuario zero um',
+        senha: '01',
+      },
     };
 
     const response = await request(app)
-      .put('/usuario')
+      .post('/usuario')
       .send(usu);
 
     expect(response.status).toBe(201);
+    expect(response.body).toBeTruthy();
+    expect(response.body).toHaveProperty('location');
+
+    const resp = await request(app)
+      .get(`${response.body.location}`);
+
+    const usuUpdate = { ...resp.body.data, senha: 'qqq' };
+
+    const responseUpdate = await request(app)
+      .put('/usuario')
+      .send({ data: usuUpdate });
+
+    expect(responseUpdate.status).toBe(201);
+    expect(responseUpdate.body.data.senha).toBe('qqq');
 
     done();
   });
 
   it('Deve enviar status 404 ao tentar atualizar um usuario inexistente', async (done) => {
     const usu = {
-      id: 99,
-      email: 'naoexiste@email.com',
-      login: 'usuario01',
-      nome: 'usuario zero um',
-      senha: 'qqq',
+      data: {
+        id: 99,
+        email: 'naoexiste@email.com',
+        login: 'usuario01',
+        nome: 'usuario zero um',
+        senha: 'qqq',
+      },
     };
 
     const response = await request(app)
@@ -120,10 +150,12 @@ describe('UsuarioModel', () => {
 
   it('Deve criticar ao tentar atualizar um usuario sem id', async (done) => {
     const usu = {
-      email: 'naoexiste@email.com',
-      login: 'usuario01',
-      nome: 'usuario zero um',
-      senha: 'qqq',
+      data: {
+        email: 'naoexiste@email.com',
+        login: 'usuario01',
+        nome: 'usuario zero um',
+        senha: 'qqq',
+      },
     };
 
     const response = await request(app)
@@ -167,17 +199,21 @@ describe('UsuarioModel', () => {
 
   it('Deve recuperar uma lista de usuários', async (done) => {
     const usu01 = {
-      email: 'usuario01@email.com',
-      login: 'usuario01',
-      nome: 'usuario zero um',
-      senha: '01',
+      data: {
+        email: 'usuario01@email.com',
+        login: 'usuario01',
+        nome: 'usuario zero um',
+        senha: '01',
+      },
     };
 
     const usu02 = {
-      email: 'usuario02@email.com',
-      login: 'usuario02',
-      nome: 'usuario zero dois',
-      senha: '02',
+      data: {
+        email: 'usuario02@email.com',
+        login: 'usuario02',
+        nome: 'usuario zero dois',
+        senha: '02',
+      },
     };
 
     await request(app)
@@ -202,7 +238,8 @@ describe('UsuarioModel', () => {
       .get('/usuario/3');
 
     expect(response.status).toBe(200);
-    expect(response.body.length).toEqual(1);
+    expect(response.body.data).toBeTruthy();
+    expect(response.body.data.id).toBe(3);
 
     done();
   });
@@ -219,10 +256,12 @@ describe('UsuarioModel', () => {
 
   it('Deve logar usuario informando login/senha', async (done) => {
     const usu = {
-      email: 'usuario01@email.com',
-      login: 'usuario01',
-      nome: 'usuario zero um',
-      senha: '01',
+      data: {
+        email: 'usuario01@email.com',
+        login: 'usuario01',
+        nome: 'usuario zero um',
+        senha: '01',
+      },
     };
 
     const response = await request(app)
@@ -237,10 +276,12 @@ describe('UsuarioModel', () => {
 
   it('Deve criticar login nulo ao logar um usuario', async (done) => {
     const usu = {
-      email: 'usuario01@email.com',
-      login: '',
-      nome: 'usuario zero um',
-      senha: '01',
+      data: {
+        email: 'usuario01@email.com',
+        login: '',
+        nome: 'usuario zero um',
+        senha: '01',
+      },
     };
 
     const response = await request(app)
@@ -255,10 +296,12 @@ describe('UsuarioModel', () => {
 
   it('Não deve logar usuario informando login/senha inválidos', async (done) => {
     const usu = {
-      email: 'usuario01@email.com',
-      login: 'usuario01',
-      nome: 'usuario zero um',
-      senha: '01as',
+      data: {
+        email: 'usuario01@email.com',
+        login: 'usuario01',
+        nome: 'usuario zero um',
+        senha: '01as',
+      },
     };
 
     const response = await request(app)
