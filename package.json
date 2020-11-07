@@ -36,7 +36,9 @@
     "dev": "ts-node-dev src/server.ts --ignore __tests__",
     "build": "tsc",
     "start": "node ./dist/src/server.js",
-    "test": "jest --detectOpenHandles"
+    "pretest": "knex migrate:latest",
+    "test": "jest --detectOpenHandles",
+    "posttest": "knex migrate:rollback"
   },
   "keywords": [],
   "author": "danielson",
