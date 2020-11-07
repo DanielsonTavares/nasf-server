@@ -12,16 +12,16 @@ async function verificaExistencia(id: String) {
 class UsuarioController {
   async post(request: Request, response: Response, next: NextFunction) {
     try {
-      const { body } = request;
+      const { data } = request.body;
 
-      if (!body.login) {
+      if (!data.login) {
         throw new ErrorHandler(400, 'Login não pode ser nulo');
       }
 
-      const usuario = new Usuario(body);
-      await usuario.create();
+      const usuario = new Usuario(data);
+      const id: number = await usuario.create();
 
-      response.status(201).json({ message: 'Recurso criado com sucesso', body });
+      response.status(201).json({ message: 'Recurso criado com sucesso.', location: `/usuario/${id}` });
     } catch (e) {
       next(e);
     }
@@ -83,13 +83,13 @@ class UsuarioController {
 
   async login(request: Request, response: Response, next: NextFunction) {
     try {
-      const { body } = request;
+      const { data } = request.body;
 
-      if (!body.login) {
+      if (!data.login) {
         throw new ErrorHandler(400, 'Login não pode ser nulo');
       }
 
-      const usuario = new Usuario(body);
+      const usuario = new Usuario(data);
       const isLogado = await usuario.login();
 
       if (isLogado) {

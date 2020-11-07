@@ -21,10 +21,10 @@ class Usuario {
     return this.usu.login;
   }
 
-  async create(): Promise<IUsuario> {
+  async create(): Promise<number> {
     try {
-      await knex('usuario').insert(this.usu);
-      return this.usu;
+      const id: number = await knex('usuario').insert(this.usu, 'id');
+      return id;
     } catch (e) {
       throw new ErrorHandler(500, e);
     }
@@ -35,8 +35,8 @@ class Usuario {
       this.usu.data_atualizacao = new Date();
       if (this.usu.id) {
         await knex('usuario').where('id', this.usu.id).update(this.usu);
-      } else if (this.usu.login) {
-        await knex('usuario').where('login', this.usu.login).update(this.usu);
+        // } else if (this.usu.login) {
+        //   await knex('usuario').where('login', this.usu.login).update(this.usu);
       } else {
         throw new ErrorHandler(400, 'Id ou login deve ser informado');
       }
