@@ -37,7 +37,7 @@
     "build": "tsc",
     "start": "node ./dist/src/server.js",
     "pretest": "knex migrate:latest",
-    "test": "jest --detectOpenHandles",
+    "test": "jest --detectOpenHandles --verbose",
     "posttest": "knex migrate:rollback"
   },
   "keywords": [],
