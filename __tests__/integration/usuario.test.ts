@@ -11,6 +11,12 @@ describe('UsuarioModel', () => {
     done();
   });
 
+  afterEach(async (done) => {
+    await knex('usuario').del();
+
+    done();
+  });
+
   it('Deve inserir um usuario com login usuario01', async (done) => {
     const usu = {
       data: {
@@ -67,6 +73,10 @@ describe('UsuarioModel', () => {
         senha: '01',
       },
     };
+
+    await request(app)
+      .post('/usuarios')
+      .send(usu);
 
     const response = await request(app)
       .post('/usuarios')
@@ -168,8 +178,23 @@ describe('UsuarioModel', () => {
   });
 
   it('Deve deletar um usuario', async (done) => {
+    const usuTmp = {
+      data: {
+        email: 'usuario01@email.com',
+        login: 'usuario01',
+        nome: 'usuario zero um',
+        senha: '01',
+      },
+    };
+
+    const responseTmp = await request(app)
+      .post('/usuarios')
+      .send(usuTmp);
+
+    expect(responseTmp.status).toBe(201);
+
     const usu = {
-      id: 1,
+      id: `${responseTmp.body.data.id}`,
     };
 
     const response = await request(app)
@@ -234,12 +259,27 @@ describe('UsuarioModel', () => {
   });
 
   it('Deve recuperar um usuário pelo id', async (done) => {
+    const usuTmp = {
+      data: {
+        email: 'usuario01@email.com',
+        login: 'usuario01',
+        nome: 'usuario zero um',
+        senha: '01',
+      },
+    };
+
+    const responseTmp = await request(app)
+      .post('/usuarios')
+      .send(usuTmp);
+
+    expect(responseTmp.status).toBe(201);
+
     const response = await request(app)
-      .get('/usuarios/3');
+      .get(`${responseTmp.body.location}`);
 
     expect(response.status).toBe(200);
     expect(response.body.data).toBeTruthy();
-    expect(response.body.data.id).toBe(3);
+    // expect(response.body.data.id).toBe(1);
 
     done();
   });
@@ -255,6 +295,21 @@ describe('UsuarioModel', () => {
   });
 
   it('Deve logar usuario informando login/senha', async (done) => {
+    const usuTmp = {
+      data: {
+        email: 'usuario01@email.com',
+        login: 'usuario01',
+        nome: 'usuario zero um',
+        senha: '01',
+      },
+    };
+
+    const responseTmp = await request(app)
+      .post('/usuarios')
+      .send(usuTmp);
+
+    expect(responseTmp.status).toBe(201);
+
     const usu = {
       data: {
         email: 'usuario01@email.com',

@@ -21,7 +21,7 @@ class UsuarioController {
       const usuario = new Usuario(data);
       const id: number = await usuario.create();
 
-      response.status(201).json({ message: 'Recurso criado com sucesso.', location: `/usuarios/${id}` });
+      response.status(201).json({ message: 'Recurso criado com sucesso.', location: `/usuarios/${id}`, data: { id } });
     } catch (e) {
       next(e);
     }
