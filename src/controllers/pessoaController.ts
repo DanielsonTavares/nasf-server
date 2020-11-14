@@ -76,12 +76,7 @@ class PessoaController {
     try {
       const filters = request.query;
 
-      console.log(`filters ==> ${JSON.stringify(filters)}`);
-      console.log(`filters.nome ==> ${JSON.stringify(filters.nome)}`);
-
       const result = await Pessoa.findByName(filters.nome as string);
-
-      console.log(`result ==> ${JSON.stringify(result)}`);
 
       response.status(200).json({ data: result });
     } catch (e) {
