@@ -1,100 +1,89 @@
 import knex from '../database';
 import ErrorHandler from './Erro';
+import * as Valida from '../utils/validations';
 
-interface IPessoa {
-  id: Number;
-  nome: String;
+export interface IPessoa {
+  id: number;
+  nome: string;
   nascimento: Date;
-  sexo: String;
-  email: String;
-  ddd_fixo: String;
-  tel_fixo: String;
-  ddd_cel: String;
-  tel_cel: String;
-  cep: String;
-  tipo_logradouro: String;
-  logradouro: String;
-  numero_logradouro: String;
-  complemento: String;
-  bairro: String;
-  cidade: String;
-  uf: String;
-  cpf: String;
-  rg: String;
+  sexo: string;
+  email: string;
+  ddd_fixo: string;
+  tel_fixo: string;
+  ddd_cel: string;
+  tel_cel: string;
+  cep: string;
+  tipo_logradouro: string;
+  logradouro: string;
+  numero_logradouro: string;
+  complemento: string;
+  bairro: string;
+  cidade: string;
+  uf: string;
+  cpf: string;
+  rg: string;
   data_atualizacao: Date;
 }
 
-class Pessoa {
-  private pessoa: IPessoa;
-
-  constructor(param: IPessoa) {
-    this.pessoa = param;
+const validaObrigatorio = (pessoa: IPessoa): void => {
+  if (!pessoa.cpf) {
+    throw new ErrorHandler(400, 'Cpf obrigatório');
   }
 
-  getNome() {
-    return this.pessoa.nome;
+  if (!pessoa.nome) {
+    throw new ErrorHandler(400, 'Nome obrigatório');
   }
 
-  async create() {
-    try {
-      await knex('pessoa').insert(this.pessoa);
-    } catch (e) {
-      throw new ErrorHandler(500, e);
+  if (!pessoa.nascimento) {
+    throw new ErrorHandler(400, 'Nascimento obrigatório');
+  }
+
+  if (pessoa.tel_fixo) {
+    if (!pessoa.ddd_fixo) {
+      throw new ErrorHandler(400, 'DDD do telefone fixo obrigatório');
     }
   }
 
-  async update() {
-    try {
-      this.pessoa.data_atualizacao = new Date();
-      await knex('pessoa').where('id', this.pessoa.id).update(this.pessoa);
-    } catch (e) {
-      throw new ErrorHandler(500, e);
+  if (pessoa.tel_cel) {
+    if (!pessoa.ddd_cel) {
+      throw new ErrorHandler(400, 'DDD do telefone celular obrigatório');
     }
   }
+};
 
-  async delete() {
-    try {
-      await knex('pessoa').where('id', this.pessoa.id).del();
-    } catch (e) {
-      throw new ErrorHandler(500, e);
-    }
+const valida = (pessoa: IPessoa): void => {
+  if (!Valida.cpf(pessoa.cpf)) {
+    throw new ErrorHandler(400, 'Cpf inválido');
   }
+};
 
-  static async findAll(): Promise<IPessoa[]> {
+export default {
+  create: async (pessoa: IPessoa) => {
+    try {
+      validaObrigatorio(pessoa);
+      valida(pessoa);
+
+      const id: number = await knex('pessoa').insert(pessoa, 'id');
+      return id;
+    } catch (e) {
+      // console.log(`e model ==> ${e}`);
+      throw new ErrorHandler(e.code, e.message);
+    }
+  },
+
+  findAll: async (): Promise<IPessoa[]> => {
     try {
       return await knex('pessoa').select('*');
     } catch (e) {
-      throw new ErrorHandler(500, e);
+      throw new ErrorHandler(e.code, e.message);
     }
-  }
+  },
 
-  static async findById(id: String) {
+  findByName: async (nome: string): Promise<IPessoa[]> => {
     try {
-      const qryResult = await knex('pessoa').where('id', id).count('id');
-
-      if (qryResult[0].count <= 0) {
-        return null;
-      }
-
-      return await knex('pessoa').where({ id }).select('*');
+      return await knex('pessoa').where('nome', 'like', `%${nome}%`).select('*');
     } catch (e) {
-      throw new ErrorHandler(500, e);
+      throw new ErrorHandler(e.code, e.message);
     }
-  }
-
-  static async findOne(id: String): Promise<boolean> {
-    try {
-      const qryResult = await knex('pessoa').where('id', id).count('id');
-
-      if (qryResult[0].count <= 0) {
-        return false;
-      }
-    } catch (e) {
-      throw new ErrorHandler(500, e);
-    }
-
-    return true;
-  }
-}
-
-export default Pessoa;
+  },
+};

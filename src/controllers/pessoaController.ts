@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import ErrorHandler from '../models/Erro';
-import Pessoa from '../models/pessoasModel';
+import Pessoa from '../models/pessoaModel';
 
 // async function verificaExistencia(id: String) {
 //   const result = await Pessoa.findOne(id);
