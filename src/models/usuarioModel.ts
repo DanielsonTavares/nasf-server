@@ -95,9 +95,11 @@ class Usuario {
     return true;
   }
 
-  async login() {
+  static async login(params: any) {
     try {
-      const qryResult = await knex('usuario').where({ login: this.usu.login, senha: this.usu.senha }).count('login');
+      const { login, password } = params;
+
+      const qryResult = await knex('usuario').where({ login, senha: password }).count('login');
 
       if (qryResult[0].count <= 0) {
         return false;
@@ -105,6 +107,7 @@ class Usuario {
 
       return true;
     } catch (e) {
+      console.log(`e ==> ${e}`);
       throw new ErrorHandler(500, e);
     }
   }

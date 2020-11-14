@@ -319,9 +319,12 @@ describe('UsuarioModel', () => {
       },
     };
 
+    const buff = Buffer.from(`${usu.data.login}:${usu.data.senha}`);
+    const base64data = buff.toString('base64');
+
     const response = await request(app)
       .post('/usuarios/login')
-      .send(usu);
+      .set('authorization', `Basic ${base64data}`);
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe('usuario01 logado com sucesso');
@@ -339,9 +342,12 @@ describe('UsuarioModel', () => {
       },
     };
 
+    const buff = Buffer.from(`${usu.data.login}:${usu.data.senha}`);
+    const base64data = buff.toString('base64');
+
     const response = await request(app)
       .post('/usuarios/login')
-      .send(usu);
+      .set('authorization', `Basic ${base64data}`);
 
     expect(response.status).toBe(400);
     expect(response.body.message).toBe('Login não pode ser nulo');
@@ -359,9 +365,12 @@ describe('UsuarioModel', () => {
       },
     };
 
+    const buff = Buffer.from(`${usu.data.login}:${usu.data.senha}`);
+    const base64data = buff.toString('base64');
+
     const response = await request(app)
       .post('/usuarios/login')
-      .send(usu);
+      .set('authorization', `Basic ${base64data}`);
 
     expect(response.status).toBe(401);
     expect(response.body.message).toBe('usuario01 nao logado');

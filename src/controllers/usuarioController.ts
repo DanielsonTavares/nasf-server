@@ -83,19 +83,26 @@ class UsuarioController {
 
   async login(request: Request, response: Response, next: NextFunction) {
     try {
-      const { data } = request.body;
+      const [, hash] = request.headers.authorization ? request.headers.authorization?.split(' ') : [];
 
-      if (!data.login) {
+      const [login, password] = Buffer.from(hash, 'base64')
+        .toString()
+        .split(':');
+
+      if (!login) {
         throw new ErrorHandler(400, 'Login não pode ser nulo');
       }
+      if (!password) {
+        throw new ErrorHandler(400, 'Password não pode ser nulo');
+      }
 
-      const usuario = new Usuario(data);
-      const isLogado = await usuario.login();
+      // const usuario = new Usuario(data);
+      const isLogado = await Usuario.login({ login, password });
 
       if (isLogado) {
-        response.status(200).json({ ok: true, message: `${usuario.getNome()} logado com sucesso` });
+        response.status(200).json({ ok: true, message: `${login} logado com sucesso` });
       } else {
-        throw new ErrorHandler(401, `${usuario.getNome()} nao logado`);
+        throw new ErrorHandler(401, `${login} nao logado`);
       }
     } catch (e) {
       next(e);
