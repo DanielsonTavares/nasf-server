@@ -19,6 +19,7 @@ export const handleError = async (err: ErrorHandler, res: Response) => {
     status: 'error',
     name,
     message,
+    stack: err.stack,
   });
 };
 
