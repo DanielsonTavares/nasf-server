@@ -18,8 +18,7 @@ class UsuarioController {
         throw new ErrorHandler(400, 'Login não pode ser nulo');
       }
 
-      const usuario = new Usuario(data);
-      const id: number = await usuario.create();
+      const id: number = await Usuario.create(data);
 
       response.status(201).json({ message: 'Recurso criado com sucesso.', location: `/usuarios/${id}`, data: { id } });
     } catch (e) {
@@ -33,9 +32,7 @@ class UsuarioController {
 
       await verificaExistencia(data.id);
 
-      const usuario = new Usuario(data);
-
-      await usuario.update();
+      await Usuario.update(data);
 
       response.status(201).json({ data });
     } catch (e) {
@@ -45,11 +42,11 @@ class UsuarioController {
 
   async delete(request: Request, response: Response, next: NextFunction) {
     try {
-      const { body } = request;
-      await verificaExistencia(body.id);
+      const { id } = request.body;
+      await verificaExistencia(id);
 
-      const usuario = new Usuario(body);
-      usuario.delete();
+      // const usuario = new Usuario(body);
+      Usuario.delete({ id });
 
       response.status(200).json({ ok: true, message: 'exclusão realizada com sucesso' });
     } catch (e) {

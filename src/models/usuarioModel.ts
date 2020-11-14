@@ -1,7 +1,7 @@
 import knex from '../database';
 import ErrorHandler from './Erro';
 
-interface IUsuario {
+export interface IUsuario {
   id?: Number,
   nome: String;
   login: String;
@@ -11,50 +11,41 @@ interface IUsuario {
 }
 
 class Usuario {
-  private usu: IUsuario;
-
-  constructor(param: IUsuario) {
-    this.usu = param;
-  }
-
-  getNome() {
-    return this.usu.login;
-  }
-
-  async create(): Promise<number> {
+  static async create(usuario: IUsuario): Promise<number> {
     try {
-      const id: number = await knex('usuario').insert(this.usu, 'id');
+      const id: number = await knex('usuario').insert(usuario, 'id');
       return id;
     } catch (e) {
       throw new ErrorHandler(500, e);
     }
   }
 
-  async update(): Promise<IUsuario> {
+  static async update(param: IUsuario): Promise<IUsuario> {
     try {
-      this.usu.data_atualizacao = new Date();
+      const usu = param;
+      usu.data_atualizacao = new Date();
+
       let result = [];
-      if (this.usu.id) {
-        result = await knex('usuario').where('id', this.usu.id).update(this.usu, '*');
+
+      if (usu.id) {
+        result = await knex('usuario').where('id', usu.id).update(usu, '*');
       } else {
-        throw new ErrorHandler(400, 'Id ou login deve ser informado');
+        throw new ErrorHandler(400, 'Id deve ser informado');
       }
 
       return result[0];
     } catch (e) {
+      console.log(`e ==> ${e}`);
       throw new ErrorHandler(500, e);
     }
   }
 
-  async delete() {
+  static async delete(params: { id: number }) {
     try {
-      let id: Number = 0;
+      const { id } = params;
 
-      if (this.usu.id) {
-        id = this.usu.id;
+      if (id) {
         await knex('usuario').where('id', id).del();
-      } else if (this.usu.login) {
-        await knex('usuario').where('login', this.usu.login).del();
       } else {
         throw new ErrorHandler(400, 'Id ou login deve ser informado');
       }
@@ -95,7 +86,7 @@ class Usuario {
     return true;
   }
 
-  static async login(params: any) {
+  static async login(params: { login: string; password: string }) {
     try {
       const { login, password } = params;
 

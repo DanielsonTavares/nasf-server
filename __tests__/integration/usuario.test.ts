@@ -132,6 +132,8 @@ describe('UsuarioModel', () => {
       .put('/usuarios')
       .send({ data: usuUpdate });
 
+    console.log(`responseUpdate.body.data ==> ${JSON.stringify(responseUpdate.body.data)}`);
+
     expect(responseUpdate.status).toBe(201);
     expect(responseUpdate.body.data.senha).toBe('qqq');
 
