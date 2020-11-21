@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import ErrorHandler from '../models/Erro';
 import Usuario from '../models/usuarioModel';
+import * as Jwt from '../utils/jwt';
 
 async function verificaExistencia(id: String) {
   const result = await Usuario.findOne(id);
@@ -16,6 +17,12 @@ class UsuarioController {
 
       if (!data.login) {
         throw new ErrorHandler(400, 'Login não pode ser nulo');
+      }
+
+      const result = await Usuario.find(data.login);
+
+      if (result) {
+        throw new ErrorHandler(400, `Já existe um usuário com o login informado ${data.login}`);
       }
 
       const id: number = await Usuario.create(data);
@@ -97,10 +104,26 @@ class UsuarioController {
       const isLogado = await Usuario.login({ login, password });
 
       if (isLogado) {
-        response.status(200).json({ ok: true, message: `${login} logado com sucesso` });
+        const usu = await Usuario.find(login);
+        const token = Jwt.sign(usu);
+        request.headers.authorization = token;
+        response.status(200).json({ ok: true, message: `${login} logado com sucesso`, token });
       } else {
         throw new ErrorHandler(401, `${login} nao logado`);
       }
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async token(request: Request, response: Response, next: NextFunction) {
+    try {
+      const { data } = request.body;
+
+      const token = Usuario.generateToken(data);
+      const show = Jwt.verify(token);
+
+      response.status(200).json({ token, show });
     } catch (e) {
       next(e);
     }

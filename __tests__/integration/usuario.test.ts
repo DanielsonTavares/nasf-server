@@ -27,8 +27,12 @@ describe('UsuarioModel', () => {
       },
     };
 
+    const buff = Buffer.from(`${usu}`);
+    const base64data = buff.toString('base64');
+
     const response = await request(app)
       .post('/usuarios')
+      .set('authorization', `Basic ${base64data}`)
       .send(usu);
 
     expect(response.status).toBe(201);
@@ -56,6 +60,7 @@ describe('UsuarioModel', () => {
 
     const response = await request(app)
       .post('/usuarios')
+      .set({ authorization: 'Bearer dkfjaçsdkfj.djkfasjksdlfjasçdl.dsfasdfakfa' })
       .send(usu);
 
     expect(response.status).toBe(400);
@@ -82,28 +87,10 @@ describe('UsuarioModel', () => {
       .post('/usuarios')
       .send(usu);
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(400);
 
     done();
   });
-
-  // it('Deve atualizar a senha do usuario01 para www utilizando o login', async (done) => {
-  //   const usu = {
-  //     email: 'usuario01@email.com',
-  //     login: 'usuario01',
-  //     nome: 'usuario zero um',
-  //     senha: 'www',
-  //   };
-
-  //   const response = await request(app)
-  //     .put('/usuarios')
-  //     .send(usu);
-
-  //   expect(response.status).toBe(201);
-  //   expect(response.body.ok).toBe(true);
-
-  //   done();
-  // });
 
   it('Deve atualizar a senha do usuario01 para qqq', async (done) => {
     const usu = {
