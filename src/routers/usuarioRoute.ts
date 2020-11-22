@@ -36,7 +36,7 @@ router.post('/usuarios/login', usuarioController.login);
 // router.use(authMiddleWare);
 
 router.post('/usuarios', authMiddleWare, usuarioController.post);
-router.put('/usuarios', usuarioController.put);
+router.put('/usuarios', authMiddleWare, usuarioController.put);
 router.delete('/usuarios', usuarioController.delete);
 router.get('/usuarios/:id', usuarioController.getById);
 router.get('/usuarios', usuarioController.get);
