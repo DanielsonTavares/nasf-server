@@ -4,6 +4,7 @@ import request from 'supertest';
 import app from '../../src/app';
 
 import knex from '../../src/database';
+import Usuario from '../../src/models/usuarioModel';
 
 describe('UsuarioModel', () => {
   afterAll(async (done) => {
@@ -27,12 +28,9 @@ describe('UsuarioModel', () => {
       },
     };
 
-    const buff = Buffer.from(`${usu}`);
-    const base64data = buff.toString('base64');
-
     const response = await request(app)
       .post('/usuarios')
-      .set('authorization', `Basic ${base64data}`)
+      .set('authorization', `Bearer ${Usuario.generateToken(usu.data)}`)
       .send(usu);
 
     expect(response.status).toBe(201);
@@ -60,7 +58,7 @@ describe('UsuarioModel', () => {
 
     const response = await request(app)
       .post('/usuarios')
-      .set({ authorization: 'Bearer dkfjaçsdkfj.djkfasjksdlfjasçdl.dsfasdfakfa' })
+      .set('authorization', `Bearer ${Usuario.generateToken(usu.data)}`)
       .send(usu);
 
     expect(response.status).toBe(400);
@@ -81,10 +79,12 @@ describe('UsuarioModel', () => {
 
     await request(app)
       .post('/usuarios')
+      .set('authorization', `Bearer ${Usuario.generateToken(usu.data)}`)
       .send(usu);
 
     const response = await request(app)
       .post('/usuarios')
+      .set('authorization', `Bearer ${Usuario.generateToken(usu.data)}`)
       .send(usu);
 
     expect(response.status).toBe(400);
@@ -104,6 +104,7 @@ describe('UsuarioModel', () => {
 
     const response = await request(app)
       .post('/usuarios')
+      .set('authorization', `Bearer ${Usuario.generateToken(usu.data)}`)
       .send(usu);
 
     expect(response.status).toBe(201);
@@ -118,8 +119,6 @@ describe('UsuarioModel', () => {
     const responseUpdate = await request(app)
       .put('/usuarios')
       .send({ data: usuUpdate });
-
-    console.log(`responseUpdate.body.data ==> ${JSON.stringify(responseUpdate.body.data)}`);
 
     expect(responseUpdate.status).toBe(201);
     expect(responseUpdate.body.data.senha).toBe('qqq');
@@ -178,6 +177,7 @@ describe('UsuarioModel', () => {
 
     const responseTmp = await request(app)
       .post('/usuarios')
+      .set('authorization', `Bearer ${Usuario.generateToken(usuTmp.data)}`)
       .send(usuTmp);
 
     expect(responseTmp.status).toBe(201);
@@ -232,10 +232,12 @@ describe('UsuarioModel', () => {
 
     await request(app)
       .post('/usuarios')
+      .set('authorization', `Bearer ${Usuario.generateToken(usu01.data)}`)
       .send(usu01);
 
     await request(app)
       .post('/usuarios')
+      .set('authorization', `Bearer ${Usuario.generateToken(usu02.data)}`)
       .send(usu02);
 
     const response = await request(app)
@@ -259,6 +261,7 @@ describe('UsuarioModel', () => {
 
     const responseTmp = await request(app)
       .post('/usuarios')
+      .set('authorization', `Bearer ${Usuario.generateToken(usuTmp.data)}`)
       .send(usuTmp);
 
     expect(responseTmp.status).toBe(201);
@@ -295,6 +298,7 @@ describe('UsuarioModel', () => {
 
     const responseTmp = await request(app)
       .post('/usuarios')
+      .set('authorization', `Bearer ${Usuario.generateToken(usuTmp.data)}`)
       .send(usuTmp);
 
     expect(responseTmp.status).toBe(201);
