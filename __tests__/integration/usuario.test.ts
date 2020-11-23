@@ -253,7 +253,8 @@ describe('UsuarioModel', () => {
       .send(usu02);
 
     const response = await request(app)
-      .get('/usuarios');
+      .get('/usuarios')
+      .set('authorization', `Bearer ${Usuario.generateToken(adm.data)}`);
 
     expect(response.status).toBe(200);
     expect(response.body.result.length).toBeGreaterThan(1);
@@ -379,6 +380,100 @@ describe('UsuarioModel', () => {
 
     expect(response.status).toBe(401);
     expect(response.body.message).toBe('usuario01 nao logado');
+
+    done();
+  });
+
+  it('Deve realizar uma busca com um usuário autenticado', async (done) => {
+    const usuTmp = {
+      data: {
+        email: 'usuario01@email.com',
+        login: 'usuario01',
+        nome: 'usuario zero um',
+        senha: '01',
+      },
+    };
+
+    const responseTmp = await request(app)
+      .post('/usuarios')
+      .set('authorization', `Bearer ${Usuario.generateToken(usuTmp.data)}`)
+      .send(usuTmp);
+
+    expect(responseTmp.status).toBe(201);
+
+    const usu = {
+      data: {
+        email: 'usuario01@email.com',
+        login: 'usuario01',
+        nome: 'usuario zero um',
+        senha: '01',
+      },
+    };
+
+    const buff = Buffer.from(`${usu.data.login}:${usu.data.senha}`);
+    const base64data = buff.toString('base64');
+
+    const response = await request(app)
+      .post('/usuarios/login')
+      .set('authorization', `Basic ${base64data}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('usuario01 logado com sucesso');
+
+    const resp = await request(app)
+      .get('/usuarios')
+      .set('authorization', `Bearer ${Usuario.generateToken(usuTmp.data)}`);
+
+    expect(resp.status).toBe(200);
+    console.log(`resp.body.data ==> ${JSON.stringify(resp.body.result)}`);
+    expect(resp.body.result[0]).toHaveProperty('email');
+
+    done();
+  });
+
+  it('Não Deve realizar uma busca com um usuário não autenticado', async (done) => {
+    const usuTmp = {
+      data: {
+        email: 'usuario01@email.com',
+        login: 'usuario01',
+        nome: 'usuario zero um',
+        senha: '01',
+      },
+    };
+
+    const responseTmp = await request(app)
+      .post('/usuarios')
+      .set('authorization', `Bearer ${Usuario.generateToken(usuTmp.data)}`)
+      .send(usuTmp);
+
+    expect(responseTmp.status).toBe(201);
+
+    const usu = {
+      data: {
+        email: 'usuario01@email.com',
+        login: 'usuario01',
+        nome: 'usuario zero um',
+        senha: '01',
+      },
+    };
+
+    const buff = Buffer.from(`${usu.data.login}:${usu.data.senha}`);
+    const base64data = buff.toString('base64');
+
+    const response = await request(app)
+      .post('/usuarios/login')
+      .set('authorization', `Basic ${base64data}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('usuario01 logado com sucesso');
+
+    const resp = await request(app)
+      .get('/usuarios')
+      .set('authorization', `Bearer ${Usuario.generateToken(usuTmp.data)}1`);
+
+    expect(resp.status).toBe(400);
+
+    console.log(`resp.body.data ==> ${JSON.stringify(resp.body.result)}`);
 
     done();
   });
