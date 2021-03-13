@@ -87,10 +87,19 @@ class Usuario {
     return true;
   }
 
-  static async find(login: string): Promise<IUsuario> {
-    const result = await knex('usuario').where({ login }).select('*');
+  static async find(login: string): Promise<IUsuario | null> {
+    try {
+      const result = await knex('usuario').where({ login }).select('*');
 
-    return result[0];
+      if (result.length <= 0) {
+        return null;
+      }
+
+      return result[0];
+    } catch (e) {
+      console.log(`e.stack ==> ${JSON.stringify(e.stack)}`);
+      throw new ErrorHandler(500, e);
+    }
   }
 
   static async login(params: { login: string; password: string }) {

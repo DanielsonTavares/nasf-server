@@ -19,11 +19,17 @@ class UsuarioController {
         throw new ErrorHandler(400, 'Login não pode ser nulo');
       }
 
+      const result = await Usuario.find(data.login);
+
+      if (result) {
+        throw new ErrorHandler(400, `Já existe um usuário com o login informado ${data.login}`);
+      }
+
       const id: number = await Usuario.create(data);
 
-      response.status(201).json({ message: 'Recurso criado com sucesso.', location: `/usuarios/${id}`, data: { id } });
+      return response.status(201).json({ message: 'Recurso criado com sucesso.', location: `/usuarios/${id}`, data: { id } });
     } catch (e) {
-      next(e);
+      return next(e);
     }
   }
 
@@ -121,7 +127,6 @@ class UsuarioController {
 
       response.status(200).json({ token, show });
     } catch (e) {
-      console.log(`e ==> ${e}`);
       next(e);
     }
   }
