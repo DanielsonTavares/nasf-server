@@ -1,5 +1,6 @@
 import knex from '../database';
 import ErrorHandler from './Erro';
+import * as Jwt from '../utils/jwt';
 
 export interface IUsuario {
   id?: Number,
@@ -86,6 +87,12 @@ class Usuario {
     return true;
   }
 
+  static async find(login: string): Promise<IUsuario> {
+    const result = await knex('usuario').where({ login }).select('*');
+
+    return result[0];
+  }
+
   static async login(params: { login: string; password: string }) {
     try {
       const { login, password } = params;
@@ -101,6 +108,10 @@ class Usuario {
       console.log(`e ==> ${e}`);
       throw new ErrorHandler(500, e);
     }
+  }
+
+  static generateToken(usuario: IUsuario) {
+    return Jwt.sign(usuario);
   }
 }
 

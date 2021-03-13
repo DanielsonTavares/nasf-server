@@ -7,7 +7,12 @@ class ErrorHandler extends Error {
     super(message);
 
     this.name = code.toString();
-    this.code = code;
+    if (!code) {
+      this.code = code;
+    } else {
+      this.code = 500;
+    }
+
     this.message = message;
   }
 }

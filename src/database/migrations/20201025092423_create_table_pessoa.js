@@ -25,7 +25,7 @@ exports.up = (knex) => knex.schema.createTable('pessoa', (table) => {
   table.string('rg', 9).comment('Número do RG');
 
   //
-  table.datetime('data_criacao').defaultTo(knex.fn.now(6));
+  table.datetime('data_criacao');//.defaultTo(knex.fn.now(6));
   table.datetime('data_atualizacao');
 });
 

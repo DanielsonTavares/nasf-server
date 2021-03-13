@@ -14,10 +14,10 @@ const app = express();
 app.use(bodyParser.json());
 app.use(urlencoded({ extended: true }));
 
-app.use(usuarioRotas);
 app.use(grupoRotas);
 app.use(indexRotas);
 app.use(pessoaRotas);
+app.use(usuarioRotas);
 
 app.use((req, res, next) => {
   res.statusCode = 400;

@@ -4,8 +4,9 @@ dotenv.config();
 
 const config = {
   development: {
-    client: process.env.CLIENT_DB,
-    connection: process.env.DATABASE_URL,
+    client: 'sqlite3',
+    connection: {filename: `${__dirname}/devdb.db`},
+    useNullAsDefault: true,
     migrations: {
       tableName: 'knex_migrations',
       directory: `${__dirname}/${process.env.PATH_DIST}/database/migrations`,
@@ -16,8 +17,9 @@ const config = {
     },
   },
   test: {
-    client: process.env.CLIENT_DB,
-    connection: 'postgres://postgres:123456@localhost/nasfdb_test',
+    client: 'sqlite3',
+    connection: {filename: `${__dirname}/testdb.db`},
+    useNullAsDefault: true,
     migrations: {
       tableName: 'knex_migrations',
       directory: `${__dirname}/${process.env.PATH_DIST}/database/migrations`,
